@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.colecionador.centerbrew" version="1.0.0" xmlns="http://w3.org" xmlns:cdv="http://apache.org">
+    <name>Centerbrew</name>
+    <description>Central Homebrew para iOS Legacy</description>
+    <author>Colecionador Tech</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="cydia://*" />
+    <allow-intent href="sileo://*" />
+    <allow-intent href="zbra://*" />
+    <platform name="ios">
+        <preference name="deployment-target" value="10.0" />
+        <preference name="DisallowOverscroll" value="true" />
+    </platform>
+</widget>
