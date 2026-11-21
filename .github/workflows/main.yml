@@ -1,0 +1,47 @@
+name: Compilar Centerbrew IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Baixar arquivos do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js e Cordova
+        run: |
+          npm install -g cordova
+
+      - name: Preparar projeto iOS
+        run: |
+          cordova platform add ios
+          cordova prepare ios
+
+      - name: Compilar .APP sem assinatura (para Jailbreak/AppSync)
+        run: |
+          xcodebuild -workspace platforms/ios/Centerbrew.xcworkspace \
+            -scheme Centerbrew \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Empacotar em Centerbrew.ipa
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/Centerbrew.app Payload/
+          zip -r Centerbrew.ipa Payload
+
+      - name: Disponibilizar .IPA para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: Centerbrew-iOS-IPA
+          path: Centerbrew.ipa
+          
