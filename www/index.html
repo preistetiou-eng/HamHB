@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Centerbrew</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F2F2F7;
+            color: #000000;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: calc(65px + env(safe-area-inset-bottom));
+        }
+
+        /* Barra Superior estilo iOS */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: rgba(249, 249, 249, 0.94);
+            border-bottom: 1px solid #C6C6C8;
+            padding: 14px 16px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            display: none;
+            color: #5856D6;
+            font-size: 17px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        /* Conteúdo Principal */
+        .container {
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #5856D6, #AF52DE);
+            color: #FFFFFF;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .banner h2 {
+            margin: 0 0 4px 0;
+            font-size: 18px;
+        }
+
+        .banner p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: #6D6D72;
+            margin: 0 0 8px 12px;
+            font-weight: 600;
+        }
+
+        /* Lista estilo Grouped TableView */
+        .card-list {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #E5E5EA;
+        }
+
+        .list-item {
+            padding: 14px 16px;
+            border-bottom: 1px solid #E5E5EA;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:active {
+            background-color: #E5E5EA;
+        }
+
+        .item-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .item-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #8E8E93;
+        }
+
+        .chevron {
+            color: #C7C7CC;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* Tela de Detalhes */
+        #detail-view {
+            display: none;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #E5E5EA;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            background-color: #EFEFF4;
+            color: #5856D6;
+            margin-bottom: 10px;
+        }
+
+        #detail-title {
+            margin: 0 0 6px 0;
+            font-size: 22px;
+        }
+
+        #detail-subtitle {
+            margin: 0 0 16px 0;
+            font-size: 14px;
+            color: #8E8E93;
+            border-bottom: 1px solid #E5E5EA;
+            padding-bottom: 12px;
+        }
+
+        #detail-body {
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-line;
+            margin-bottom: 24px;
+        }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #5856D6;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* Barra de Abas Inferior (TabBar) */
+        .tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(249, 249, 249, 0.94);
+            border-top: 1px solid #C6C6C8;
+            display: flex;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 100;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: none;
+            border: none;
+            color: #8E8E93;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            color: #5856D6;
+        }
+
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <button class="back-btn" id="back-btn" onclick="closeDetail()">&#8249; Voltar</button>
+        <h1 id="nav-title">Centerbrew Jogos</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div class="container">
+        <div id="list-view">
+            <div class="banner">
+                <h2>Centerbrew Legacy</h2>
+                <p>Central de preservação, jogos e guias para iOS 10–12.</p>
+            </div>
+            <div class="section-title" id="section-label">Destaques</div>
+            <div class="card-list" id="items-container"></div>
+        </div>
+
+        <div id="detail-view">
+            <span class="badge" id="detail-category">Categoria</span>
+            <h2 id="detail-title">Título</h2>
+            <p id="detail-subtitle">Subtítulo</p>
+            <div id="detail-body">Conteúdo</div>
+            <button class="action-btn" id="detail-action" onclick="triggerAction()">Ação</button>
+        </div>
+    </div>
+
+    <div class="tabbar">
+        <button class="tab-btn active" onclick="switchTab('jogos', this)">
+            <span class="tab-icon">&#127918;</span>
+            <span>Jogos</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('guias', this)">
+            <span class="tab-icon">&#128214;</span>
+            <span>Guias</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('forum', this)">
+            <span class="tab-icon">&#128172;</span>
+            <span>Fórum</span>
+        </button>
+    </div>
+
+    <script>
+        // Dados em ES5 puro para rodar sem erros no WebKit do iOS 10-12
+        var db = {
+            jogos: [
+                {
+                    title: "RetroDoom Port",
+                    subtitle: "v1.4 • Shooter Clássico",
+                    category: "Jogo",
+                    body: "Port nativo otimizado para telas Retina e aparelhos A7 a A10.\n\n• Suporte a controles MFi\n• Controles virtuais customizáveis\n• Roda a 60 FPS no iOS 10+",
+                    actionText: "Baixar .IPA"
+                },
+                {
+                    title: "GBA4iOS Legacy",
+                    subtitle: "v2.1 • Emulador",
+                    category: "Jogo",
+                    body: "O clássico emulador de Game Boy Advance e Game Boy Color compilado para arquiteturas 64-bit antigas.\n\nInclui suporte a skins personalizadas e save states.",
+                    actionText: "Baixar .IPA"
+                },
+                {
+                    title: "FlappyJailbreak",
+                    subtitle: "v2.0 • Arcade",
+                    category: "Jogo",
+                    body: "Clone leve feito pela comunidade Cydia para testar o desempenho gráfico em aparelhos clássicos.",
+                    actionText: "Baixar .IPA"
+                }
+            ],
+            guias: [
+                {
+                    title: "Assinando .IPAs no iOS 10-12",
+                    subtitle: "Guia Básico • 5 min",
+                    category: "Guia",
+                    body: "1. Abra o Cydia, Zebra ou Sileo.\n2. Adicione o repositório oficial do Karen's Repo.\n3. Instale o tweak AppSync Unified.\n4. Agora você pode instalar qualquer arquivo .IPA pelo Filza sem precisar de computador!",
+                    actionText: "Abrir Cydia"
+                },
+                {
+                    title: "Salvando Blobs SHSH2",
+                    subtitle: "Preservação • 8 min",
+                    category: "Guia",
+                    body: "Salvar seus blobs garante que você consiga restaurar seu aparelho para versões antigas assinadas no futuro usando o Futurerestore.",
+                    actionText: "Salvar nos Favoritos"
+                }
+            ],
+            forum: [
+                {
+                    title: "[Dúvida] Cydia ou Zebra no iOS 10?",
+                    subtitle: "Por @iCollector • 14 respostas",
+                    category: "Fórum",
+                    body: "Pessoal, qual gerenciador de pacotes está abrindo mais rápido no iPhone 5s e iPad Air 1 de vocês?",
+                    actionText: "Responder Tópico"
+                },
+                {
+                    title: "[Release] Tema clássico iOS 6!",
+                    subtitle: "Por @RetroDev • 32 respostas",
+                    category: "Fórum",
+                    body: "Acabei de subir no meu repositório o tema completo com ícones glossy e dock clássico compatível com Snowboard no iOS 11 e 12.",
+                    actionText: "Responder Tópico"
+                }
+            ]
+        };
+
+        var currentTab = 'jogos';
+        var currentItem = null;
+
+        function renderList(tab) {
+            var container = document.getElementById('items-container');
+            container.innerHTML = '';
+            var list = db[tab];
+
+            for (var i = 0; i < list.length; i++) {
+                (function(item) {
+                    var div = document.createElement('div');
+                    div.className = 'list-item';
+                    div.innerHTML = '<div class="item-info"><h3>' + item.title + '</h3><p>' + item.subtitle + '</p></div><span class="chevron">&#8250;</span>';
+                    div.onclick = function() { openDetail(item); };
+                    container.appendChild(div);
+                })(list[i]);
+            }
+        }
+
+        function switchTab(tab, btnElement) {
+            currentTab = tab;
+            closeDetail();
+
+            var titles = { jogos: 'Centerbrew Jogos', guias: 'Guias & Tutoriais', forum: 'Fórum Homebrew' };
+            document.getElementById('nav-title').innerText = titles[tab];
+
+            var btns = document.querySelectorAll('.tab-btn');
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].classList.remove('active');
+            }
+            btnElement.classList.add('active');
+
+            renderList(tab);
+        }
+
+        function openDetail(item) {
+            currentItem = item;
+            document.getElementById('list-view').style.display = 'none';
+            document.getElementById('detail-view').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'block';
+
+            document.getElementById('detail-category').innerText = item.category;
+            document.getElementById('detail-title').innerText = item.title;
+            document.getElementById('detail-subtitle').innerText = item.subtitle;
+            document.getElementById('detail-body').innerText = item.body;
+            document.getElementById('detail-action').innerText = item.actionText;
+        }
+
+        function closeDetail() {
+            document.getElementById('detail-view').style.display = 'none';
+            document.getElementById('list-view').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'none';
+        }
+
+        function triggerAction() {
+            if (!currentItem) return;
+            if (currentItem.actionText === 'Abrir Cydia') {
+                window.location.href = 'cydia://';
+            } else {
+                alert('Centerbrew: Ação "' + currentItem.actionText + '" iniciada!');
+            }
+        }
+
+        // Inicializa a primeira aba
+        renderList('jogos');
+    </script>
+</body>
+  </html>
+  
